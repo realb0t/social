@@ -5,8 +5,7 @@ This is social networks api wrapper and authorization tools for social applicati
 
 Now it is a compilation of terrible code from various projects. Without tests and benchmark. =(
 
-NOT RECOMMENDED USE IN PRODUCTION
----------------------
+## NOT RECOMMENDED USE IN PRODUCTION
 
 Now supported networks:
 
