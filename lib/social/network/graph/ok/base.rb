@@ -26,15 +26,14 @@ module Social
                 http.get("/fb.do?#{Rack::Utils.universal_build(request_params)}")
               }
             rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
-              Rails.logger.warn "api problem", e.inspect
               retries += 1
               retry if retries < 3
             end
   
             rescue => e
-              Rails.logger.warn "Send problem"
-              Rails.logger.warn params.inspect
-              Rails.logger.warn e.inspect
+              #Rails.logger.warn "Send problem"
+              #Rails.logger.warn params.inspect
+              #Rails.logger.warn e.inspect
             ensure
             res
           end

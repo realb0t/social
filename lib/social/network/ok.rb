@@ -11,8 +11,8 @@ module Social
 
       def initialize(params = nil)
         
-        require File.join(Rails.root, 'lib/social/network/graph/ok/user')
-        require File.join(Rails.root, 'lib/social/network/graph/ok/notification')
+        #require File.join(File.dirname(__FILE__), 'graph', 'ok', 'user')
+        #require File.join(File.dirname(__FILE__), 'graph', 'ok', 'notification')
         
         super('ok', [ :user, :notification ], params)
       end

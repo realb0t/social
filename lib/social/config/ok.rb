@@ -4,7 +4,8 @@ module Social
       include Social::Config
       
       def config
-        super['ok'][Rails.env.to_s]
+        env = ENV['APP_ENV'] || ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development'
+        super['ok'][]
       end
     end
   end
