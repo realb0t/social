@@ -1,4 +1,8 @@
 require 'singleton'
+
+require 'active_support/all'
+require 'rack'
+
 require 'social/version'
 require 'social/provider'
 require 'social/builder'
@@ -12,6 +16,12 @@ require 'social/helper/model'
 require 'social/helper'
 require 'social/auth/controller'
 require 'social/auth'
+require 'social/network/graph/tail'
+require 'social/network/params'
+require 'social/network/base'
+require 'social/network/graph'
+require 'social/network/ok'
+require 'social/network/vk'
 require 'social/network/graph/ok/base'
 require 'social/network/graph/ok/notification'
 require 'social/network/graph/ok/user'
@@ -20,14 +30,7 @@ require 'social/network/graph/vk/base'
 require 'social/network/graph/vk/notification'
 require 'social/network/graph/vk/user'
 require 'social/network/graph/vk'
-require 'social/network/graph/tail'
-require 'social/network/graph'
-require 'social/network/base'
-require 'social/network/graph'
-require 'social/network/ok'
-require 'social/network/params'
 require 'social/network/stub'
-require 'social/network/vk'
 require 'social/network'
 require 'social/networks'
 
@@ -72,7 +75,9 @@ module Social
     end
 
     def Network(network, params = nil)
-      unless SOCIAL_TYPES.values.include?(network.try(:to_sym))
+      raise 'Not set network' unless network
+
+      unless SOCIAL_TYPES.values.include?(network.to_sym)
         raise "Can`t find network type: #{network}"
       end
 

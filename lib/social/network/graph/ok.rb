@@ -1,6 +1,6 @@
 module Social
   module Network
-    module Ok
+    class Ok
     end
   end
 end

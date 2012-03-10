@@ -1,6 +1,6 @@
 module Social
   module Network
-    module Vk
+    class Vk
     end
   end
 end
