@@ -28,9 +28,13 @@ Use wrapper
 ---------------------
 
     Social::Network(:ok).user.get_info(uid)
+
 or
+
     Social::Network::Vk.user.get_info(uid)
+
 or
+
     Social::Network(socio_type).notification.send(:message => msg, :uids => [ ... ])
 
 Use Tools
@@ -49,13 +53,15 @@ Adds an initializing environment.
       'id'     => <SOCIAL_TYPE_ID>
     }
 
-For Example:
-
-on request /odkl/*
+For example, on request /odkl/*
 
     params[:social_env][:id] # => 1
 
-and after include Social::Helper::Controller in your Rails application controller
+and after 
+    
+    include Social::Helper::Controller 
+
+in your Rails application controller
 
     Social::Env.id # => 1
     Social::Env.type # => :ok
@@ -69,4 +75,4 @@ TODO
 * More and beautiful API for Rails, Sinatra and Rack applications
 * More supported features
 
-Welcome to contributing.
+### Welcome to contributing!
