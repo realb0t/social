@@ -3,21 +3,26 @@ Social API wrapper and Tools
 
 This is social networks api wrapper and authorization tools for social applications.
 
-Now it is a compilation of code from various projects in production. Without tests. =(
-NOT RECOMMENDED USE IN PRODUCTION.
+Now it is a compilation of terrible code from various projects. Without tests and benchmark. =(
+
+NOT RECOMMENDED USE IN PRODUCTION
+---------------------
 
 Now supported networks:
 
 * vk.com 
 * odnoklassniki.ru
+* mail.ru (plans to support)
+* facebook.com (plans to support)
 
 Now supported features:
 
 * Get user profile
 * Get user friend profiles
 * Get user balance and charge off (only vk.com)
-* Initialize environment by request (example /odkl/* and /vk/*)
+* Initialize environment by request (example /odkl/*, /vk/* and other) - Rack Middleware
 * Authorization user for Rails application (support transition between pages)
+* Parameterized wrapper to call the API methods
 
 Install
 
@@ -37,7 +42,7 @@ or
 
     Social::Network(socio_type).notification.send(:message => msg, :uids => [ ... ])
 
-Use Tools
+Use environment tools
 ---------------------
 
 In config.ru
