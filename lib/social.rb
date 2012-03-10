@@ -1,8 +1,6 @@
 require 'singleton'
-
 require 'active_support/all'
 require 'rack'
-
 require 'social/version'
 require 'social/provider'
 require 'social/builder'

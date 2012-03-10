@@ -19,12 +19,11 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
-  # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
   s.add_development_dependency "rspec-core", "~> 2.0"
   s.add_development_dependency "rspec-expectations", "~> 2.0"
   s.add_development_dependency 'rack', '~> 1.4.1'
   s.add_development_dependency 'rack-test', '~> 0.6.1'
   s.add_development_dependency "rr", "~> 1.0"
   s.add_development_dependency 'activesupport', "~> 3.1.3"
+  s.add_development_dependency 'i18n', '~> 0.6.0'
 end
