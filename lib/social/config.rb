@@ -33,10 +33,12 @@ module Social
 
       def config_root
         @config_root ||= File.join(Rails.root, 'config') if defined?(Rails)
+        @config_root ||= ENV['SOCIAL_CONFIG_ROOT']
         @config_root ||= File.join('.', 'config')
       end
 
       def config_file_path
+        @config_file_path ||= ENV['SOCIAL_CONFIG_PATH']
         @config_file_path ||= File.joint(self.config_root, 'social.yml')
       end
 
