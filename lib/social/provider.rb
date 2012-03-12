@@ -19,16 +19,16 @@ module Social
           type   = Social.type_by_prefix(prefix)
           id     = Social.id_by_type(type)
 
-          request['social_env'] = {
+          request.GET['social_env'] = {
             'prefix' => prefix, 
             'type'   => type,
             'id'     => id
           }
 
-          # Устарели
-          request['soc_prefix'] = prefix
-          request['soc_type']   = type
-          request['soc_id']     = id
+          # Old
+          request.GET['soc_prefix'] = prefix
+          request.GET['soc_type']   = type
+          request.GET['soc_id']     = id
 
           @app.call(request.env)
         end
