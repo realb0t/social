@@ -1,17 +1,9 @@
 module Social
   class Config
 
-    #@@network_name = nil
-
-    #def self.included(network)
-    #  require 'pry'
-    #  binding.pry
-    #  network.send(:include, InstanceMethods)
-    #  @@network_name = network.name.split('::').last.downcase 
-    #end
-
     def initialize(network_name)
       @network_name = network_name
+      @config_file_data = {}
     end
 
     def network_name
@@ -19,7 +11,7 @@ module Social
     end
     
     def config
-      @config_data ||= load_config_file
+      @config_data ||= load_config_file[@network_name]
     end
 
     def config_file_path=(new_path)
@@ -43,7 +35,7 @@ module Social
     end
 
     def load_config_file
-      YAML.load_file(config_file_path).with_indifferent_access
+      @config_file_data[config_file_path] ||= YAML.load_file(config_file_path).with_indifferent_access
     end
 
 
