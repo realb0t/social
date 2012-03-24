@@ -1,0 +1,27 @@
+ok:
+  development: 
+    # production
+    api_server: 'http://api.odnoklassniki.ru/'
+    application_key: ''
+    secret_key: ''
+  staging: # staging
+    api_server: 'http://api.odnoklassniki.ru/'
+    application_key: ''
+    secret_key: ''
+  production: # production
+    api_server: 'http://api.odnoklassniki.ru/'
+    application_key: ''
+    secret_key: ''
+vk:
+  production:
+    key: ""
+    app_id: 1
+  staging:
+    key: ""
+    app_id: 1
+  vk_staging:
+    key: ""
+    app_id: 1
+  development:
+    key: ""
+    app_id: 1

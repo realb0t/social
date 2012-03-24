@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rack', '~> 1.4.1'
   s.add_development_dependency 'rack-test', '~> 0.6.1'
   s.add_development_dependency "rr", "~> 1.0"
+  s.add_development_dependency "pry", "~> 0.9.8.4"
   s.add_development_dependency 'activesupport', "~> 3.1.3"
   s.add_development_dependency 'i18n', '~> 0.6.0'
 end
