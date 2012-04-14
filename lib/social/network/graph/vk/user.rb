@@ -11,9 +11,9 @@ module Social
             params = { "method" => 'getProfiles', "fields" => FIELDS, :uids => Array.wrap(uids).join(",")}
             results = send(:process, params)
 
-            results = results.map.with_index { |result, i|
-              results[i]['birthday'] = result['bdate']
-              results
+            results = results.map { |result|
+              result['birthday'] = result['bdate']
+              result
             }
             
             return results unless block_given?
