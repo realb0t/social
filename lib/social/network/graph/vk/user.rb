@@ -11,6 +11,11 @@ module Social
             params = { "method" => 'getProfiles', "fields" => FIELDS, :uids => Array.wrap(uids).join(",")}
             result = send(:process, params)
 
+            p '############################ params'
+            p params
+            p '############################ result'
+            p result
+
             result['birthday'] = result['bdate']
             
             return result unless block_given?
