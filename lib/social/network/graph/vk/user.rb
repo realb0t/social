@@ -9,17 +9,14 @@ module Social
           def get_info(uids)
             
             params = { "method" => 'getProfiles', "fields" => FIELDS, :uids => Array.wrap(uids).join(",")}
-            result = send(:process, params)
+            results = send(:process, params)
 
-            p '############################ params'
-            p params
-            p '############################ result'
-            p result
-
-            result['birthday'] = result['bdate']
+            results.map!.with_index { |result, i|
+              results[i]['birthday'] = result['bdate']
+            }
             
-            return result unless block_given?
-            yield(result) if block_given?
+            return results unless block_given?
+            yield(results) if block_given?
           end
           
           def get_friends(uid)
