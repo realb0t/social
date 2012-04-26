@@ -7,8 +7,10 @@ module Social
           FIELDS = 'uid,first_name,last_name,nickname,domain,sex,birthdate,city,country,timezone,photo,photo_medium,photo_big,has_mobile,rate,contacts,education'
           
           def get_info(uids)
+            uids = Array.wrap(uids)
+            throw 'Not give uid for friends request' if uids.empty?
             
-            params = { "method" => 'getProfiles', "fields" => FIELDS, :uids => Array.wrap(uids).join(",")}
+            params = { "method" => 'getProfiles', "fields" => FIELDS, :uids => uids.join(",")}
             results = send(:process, params)
 
             results = results.map { |result|
@@ -21,6 +23,8 @@ module Social
           end
           
           def get_friends(uid)
+            throw 'Not give uid for friends request' unless uid
+
             params = { "method" => 'friends.get', :uid => uid, "fields" => FIELDS}
             result = send(:process_secure, params)
 
@@ -29,6 +33,8 @@ module Social
           end
           
           def balance(uid)
+            throw 'Not give uid for balance request' unless uid
+
             params = { "method" => 'secure.getBalance', :uid => uid }
             result = send(:process_secure, params)
             result = ((result / 100).to_f.round(2) * root.rate)
@@ -38,7 +44,7 @@ module Social
           end
           
           def charge_off_balance(uid, balance)
-            amount = (((balance).floor / root.rate).to_f.round(2) * 100).round
+            amount = (((balance).floor / root.rate.to_f).round(2) * 100).round
             params = { "method" => 'secure.withdrawVotes', :uid => uid, :votes => amount }
             result = send(:process_secure, params)
             
