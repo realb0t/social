@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency "rspec-core", "~> 2.0"
+  s.add_development_dependency "rspec-mocks"
   s.add_development_dependency "rspec-expectations", "~> 2.0"
   s.add_development_dependency 'rack', '~> 1.4.1'
   s.add_development_dependency 'rack-test', '~> 0.6.1'

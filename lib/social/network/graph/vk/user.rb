@@ -6,16 +6,15 @@ module Social
           
           FIELDS = 'uid,first_name,last_name,nickname,domain,sex,birthdate,city,country,timezone,photo,photo_medium,photo_big,has_mobile,rate,contacts,education'
           
-          def get_info(uids)
-            uids = Array.wrap(uids)
-            throw 'Not give uid for friends request' if uids.empty?
+          def get_info(*args)
+            uids = Array.wrap(args)
             
             params = { "method" => 'getProfiles', "fields" => FIELDS, :uids => uids.join(",")}
+            
             results = send(:process, params)
 
-            results = results.map { |result|
-              result['birthday'] = result['bdate']
-              result
+            results.each_with_index { |result, i|
+              results[i]['birthday'] = result['bdate'] || result['birthday']
             }
             
             return results unless block_given?

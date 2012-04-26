@@ -7,12 +7,16 @@ module Social
           include Social::Network::Graph::Tail
           include Social::Config::Vk
 
+          def http_query(query)
+            Net::HTTP.start("api.vkontakte.ru", 80).get(query)
+          end
+
           def process(params)
             params = default_options.merge(params).with_indifferent_access
             params.merge!({'sig' => form_signature(params)})
             query = "/api.php?#{Rack::Utils.build_query(params)}"
-            status, data = Net::HTTP.start("api.vkontakte.ru", 80).get(query)
-            ActiveSupport::JSON.decode(data)['response']
+            status, data = http_query(query)
+            MultiJson.load(data)['response']
           end
 
           def process_secure(params)

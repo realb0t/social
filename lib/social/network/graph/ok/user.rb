@@ -13,7 +13,7 @@ module Social
             params = { "method" => 'users.getInfo', "fields" => fields, 
               :uids => Array.wrap(uids).join(","), :session_secret_key => secret }
             response = self.send(:deliver, params)
-            result = response.present? ? ActiveSupport::JSON.decode(response.body) : []
+            result = response.present? ? MultiJson.load(response.body) : []
             result = result.is_a?(Hash) && result['error_msg'] ? nil : result
             
             return result unless block_given?
