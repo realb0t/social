@@ -6,7 +6,7 @@ describe 'Спецификация OkApi' do
   context "функция user.get_info" do
 
     before do
-      @api = Social::Network(:vk)
+      @api = Social::Network(:ok)
 
       fake_data_index = 1
       @make_fake_data = lambda do
@@ -31,7 +31,84 @@ describe 'Спецификация OkApi' do
         datas
       end 
 
+      @uids = [ 1,2,3,4 ]
+      @secret = 'session_secret_key'
+      @fields = [ 'uid', 'first_name', 'last_name' ]
+
     end
+
+
+    it "вне зависимости от способа передачи uids запрос должен формироваться стандартно" do
+      params = {
+        "method" => 'users.getInfo', 
+        "fields" => Social::Network::Graph::Ok::User::FIELDS, 
+        :uids => @uids.join(",")
+      }
+
+      @api.user.should_receive(:deliver).with(params).exactly(3).and_return([])
+      @api.user.get_info(*@uids)
+      @api.user.get_info(@uids)
+      @api.user.get_info([@uids])
+    end
+
+    it "передача сессионного secret_key" do
+
+      params = {
+        "method" => 'users.getInfo', 
+        "fields" => Social::Network::Graph::Ok::User::FIELDS, 
+        :uids => @uids.join(","),
+        :session_secret_key => @secret
+      }
+
+      @api.user.should_receive(:deliver).with(params).exactly(3).and_return([])
+      @api.user.get_info(@uids, { :secret => @secret })
+      @api.user.get_info([@uids], { :secret => @secret })
+      @api.user.get_info(*@uids, { :secret => @secret })
+    end
+
+    it "передача полей" do
+
+      params = {
+        "method" => 'users.getInfo', 
+        "fields" => @fields.sort.join(','),
+        :uids => @uids.join(","),
+        :session_secret_key => @secret
+      }
+
+      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      @api.user.get_info(@uids, { :secret => @secret, :fields => @fields })
+    end
+
+    it "передача некоторых не корректных полей" do
+
+      params = {
+        "method" => 'users.getInfo', 
+        "fields" => @fields.sort.join(','),
+        :uids => @uids.join(","),
+        :session_secret_key => @secret
+      }
+
+      uncorrect_fields = @fields + [ "uncorrect_field 1", "uncorrect_field 2" ]
+
+      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      @api.user.get_info(@uids, { :secret => @secret, :fields => uncorrect_fields })
+    end
+
+    it "передача всех не корректных полей" do
+
+      params = {
+        "method" => 'users.getInfo',
+        "fields" => Social::Network::Graph::Ok::User::FIELDS,
+        :uids => @uids.join(","),
+        :session_secret_key => @secret
+      }
+
+      uncorrect_fields = [ "uncorrect_field 1", "uncorrect_field 2" ]
+
+      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      @api.user.get_info(@uids, { :secret => @secret, :fields => uncorrect_fields })
+    end
+
     
   end
 end

@@ -6,12 +6,29 @@ module Social
           
           FIELDS = 'uid,first_name,last_name,gender,birthday,pic_1,pic_2,pic_3,pic_4,url_profile,location,current_location,age,url_profile,current_status'
           
-          def get_info(uids, secret = nil, options = nil)
-            fields = Array.wrap(options.try(:[], :fields)).join(',')
-            fields = fields.present? ? fields : FIELDS
-            
-            params = { "method" => 'users.getInfo', "fields" => fields, 
-              :uids => Array.wrap(uids).join(","), :session_secret_key => secret }
+          def get_info(*args)
+
+            if args.last.kind_of?(Hash)
+              options = args.pop #.with_indefferend_access
+              secret = options[:secret]
+              fields = options[:fields]
+              
+              fields = fields.join(',') if fields.kind_of?(Array)
+              
+              if fields
+                avalible_fields = FIELDS.split(',')
+                fields = fields.split(',').select { |field| 
+                  avalible_fields.include?(field)
+                }.sort.join(',')
+                fields = nil if fields.empty?
+              end
+            end
+
+            uids = Array.wrap(args)
+            params = { "method" => 'users.getInfo', "fields" => (fields || FIELDS), 
+              :uids => uids.join(",") }
+            params[:session_secret_key] = secret if secret
+
             response = self.send(:deliver, params)
             result = response.present? ? MultiJson.load(response.body) : []
             result = result.is_a?(Hash) && result['error_msg'] ? nil : result
