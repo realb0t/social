@@ -31,9 +31,9 @@ module Social
               :uids => uids.join(",") }
             params[:session_secret_key] = secret if secret
 
-            response = self.send(:deliver, params)
-            result = response.present? ? MultiJson.load(response.body) : []
-            result = result.is_a?(Hash) && result['error_msg'] ? nil : result
+            code, response = self.deliver(params)
+            result = response.present? ? MultiJson.load(response) : { 'error_msg' => 'Empty response' }
+            result = result.is_a?(Hash) && result['error_msg'] ? [] : result['response']
             
             return result unless block_given?
             yield(result) if block_given?

@@ -1,3 +1,30 @@
+module Rack
+  module Utils # :nodoc:
+
+    def universal_build(value, prefix = nil)
+      case value.class.to_s
+      when Array.to_s
+        value.map do |v|
+          unless unescape(prefix) =~ /\[\]$/
+            prefix = "#{prefix}[]"
+          end
+          universal_build(v, "#{prefix}")
+        end.join("&")
+      when Hash.to_s
+        value.map do |k, v|
+          universal_build(v, prefix ? "#{prefix}[#{escape(k)}]" : escape(k))
+        end.join("&")
+      when NilClass.to_s
+        prefix.to_s
+      else
+        "#{prefix}=#{escape(value.to_s)}"
+      end
+    end
+
+    module_function :universal_build
+  end
+end
+
 module Social
   module Network
     module Graph
@@ -16,26 +43,33 @@ module Social
             msg
           end
 
-          def deliver(params)
+          def http_query(query)
+            result = []
             url = URI.parse(config['api_server'])
             retries = 0
-            begin
-              res = Net::HTTP.start(url.host, url.port) { |http|
-                http.read_timeout = 10
-                request_params = build_request_params(params)
-                http.get("/fb.do?#{Rack::Utils.universal_build(request_params)}")
-              }
-            rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
-              retries += 1
-              retry if retries < 3
-            end
-  
-            rescue => e
-              #Rails.logger.warn "Send problem"
-              #Rails.logger.warn params.inspect
-              #Rails.logger.warn e.inspect
-            ensure
-            res
+            result = Net::HTTP.start(url.host, url.port) { |http|
+              http.read_timeout = 10
+              http.get(query)
+            }
+          rescue Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError, Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError => e
+            retries += 1
+            retry if retries < 3
+          ensure
+            result
+          end
+
+          def deliver(params)
+            result = []
+            request_params = build_request_params(params)
+            query = "/fb.do?#{Rack::Utils.universal_build(request_params)}"
+            result = self.http_query(query)
+          rescue => e
+            puts "====== Send problem"
+            puts params.inspect
+            puts e.to_s
+            puts e.backtrace
+          ensure
+            result
           end
 
           def build_sig(params, key)

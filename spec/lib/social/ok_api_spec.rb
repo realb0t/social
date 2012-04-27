@@ -131,6 +131,12 @@ describe 'Спецификация OkApi' do
       @api.user.get_info(@uids, {})
     end
 
+    it "данные по пользователю должны возвращаться в известном формате" do
+      data = @make_fake_datas.call(1)
+      @api.user.stub!(:http_query).and_return([200, { :response => data }.to_json])
+      results = @api.user.get_info(1234567890)
+      results.should == MultiJson.load(data.to_json)
+    end
     
   end
 end
