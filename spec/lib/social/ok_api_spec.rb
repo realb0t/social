@@ -109,6 +109,28 @@ describe 'Спецификация OkApi' do
       @api.user.get_info(@uids, { :secret => @secret, :fields => uncorrect_fields })
     end
 
+    it "вызов с неопределенными опциями" do
+      params = {
+        "method" => 'users.getInfo',
+        "fields" => Social::Network::Graph::Ok::User::FIELDS,
+        :uids => @uids.join(",")
+      }
+
+      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      @api.user.get_info(@uids, nil)
+    end
+
+    it "вызов с пустыми опциями" do
+      params = {
+        "method" => 'users.getInfo',
+        "fields" => Social::Network::Graph::Ok::User::FIELDS,
+        :uids => @uids.join(",")
+      }
+
+      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      @api.user.get_info(@uids, {})
+    end
+
     
   end
 end

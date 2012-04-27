@@ -8,6 +8,8 @@ module Social
           
           def get_info(*args)
 
+            args.pop if args.last.nil?
+
             if args.last.kind_of?(Hash)
               options = args.pop #.with_indefferend_access
               secret = options[:secret]
