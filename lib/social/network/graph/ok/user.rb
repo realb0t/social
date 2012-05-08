@@ -57,6 +57,16 @@ module Social
             return friend_profiles unless block_given?
             yield(friend_profiles) if block_given?
           end
+
+          def charge_off_balance(uid, balance)
+            return [] unless block_given?
+            yield([]) if block_given?
+          end
+
+          def balance(uid)
+            return nil unless block_given?
+            yield(nil) if block_given?
+          end
           
           alias :get_friends_uids :get_friends
           alias :get_friends_info :get_friends_profiles
