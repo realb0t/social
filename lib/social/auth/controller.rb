@@ -128,7 +128,7 @@ module Social
           
           def ie_hack
             response.headers["P3P"]='CP="CAO PSA OUR"'
-            #header('P3P: CP="NOI ADM DEV COM NAV OUR STP"');
+            #header('P3P: CP="NOI ADM DEV COM NAV OUR STP"P3P: CP="NOI ADM DEV COM NAV OUR STP"');
           end
 
           def store_location
