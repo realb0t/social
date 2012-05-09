@@ -32,7 +32,7 @@ module Social
             params[:session_secret_key] = secret if secret
 
             code, response = self.deliver(params)
-            result = response.present? ? MultiJson.load(response) : { 'error_msg' => 'Empty response' }
+            result = response.present? ? JSON.load(response) : { 'error_msg' => 'Empty response' }
             result = result.is_a?(Hash) && result['error_msg'] ? [] : result['response']
             
             return result unless block_given?

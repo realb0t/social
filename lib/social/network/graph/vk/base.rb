@@ -16,7 +16,7 @@ module Social
             params.merge!({'sig' => form_signature(params)})
             query = "/api.php?#{Rack::Utils.build_query(params)}"
             status, data = http_query(query)
-            MultiJson.load(data)['response']
+            JSON.load(data)['response']
           end
 
           def process_secure(params)
