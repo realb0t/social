@@ -33,7 +33,7 @@ module Social
 
             code, response = self.deliver(params)
             result = response.present? ? JSON.load(response) : { 'error_msg' => 'Empty response' }
-            result = result.is_a?(Hash) && result['error_msg'] ? [] : result['response']
+            result = result.is_a?(Hash) && result['error_msg'] ? [] : result
             
             return result unless block_given?
             yield(result) if block_given?
