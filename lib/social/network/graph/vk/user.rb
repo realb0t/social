@@ -31,17 +31,15 @@ module Social
             yield(result) if block_given?
           end
           
-          def balance(uid)
-            throw 'Not give uid for balance request' unless uid
-
-            params = { "method" => 'secure.getBalance', :uid => uid }
-            result = send(:process_secure, params)
-            result = ((result / 100).to_f.round(2) * root.rate)
+          def get_friends_profiles(uid)
             
-            return result unless block_given?
-            yield(result) if block_given?
+            friend_uids = get_friends_uids(uid)
+            friend_profiles = friend_uids.map { |uid| get_info(uid) }.flatten.compact
+            
+            return friend_profiles unless block_given?
+            yield(friend_profiles) if block_given?
           end
-          
+
           def charge_off_balance(uid, balance)
             amount = (((balance).floor / root.rate.to_f).round(2) * 100).round
             params = { "method" => 'secure.withdrawVotes', :uid => uid, :votes => amount }
@@ -51,13 +49,15 @@ module Social
             yield(result) if block_given?
           end
 
-          def get_friends_profiles(uid)
+          def balance(uid)
+            throw 'Not give uid for balance request' unless uid
+
+            params = { "method" => 'secure.getBalance', :uid => uid }
+            result = send(:process_secure, params)
+            result = ((result / 100).to_f.round(2) * root.rate)
             
-            friend_uids = get_friends_uids(uid)
-            friend_profiles = friend_uids.map { |uid| get_info(uid) }.flatten.compact
-            
-            return friend_profiles unless block_given?
-            yield(friend_profiles) if block_given?
+            return result unless block_given?
+            yield(result) if block_given?
           end
           
           alias :get_friends_uids :get_friends
