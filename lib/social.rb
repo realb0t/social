@@ -97,30 +97,6 @@ module Social
       end
     end
 
-    def current_id=(id)
-      @id = id
-    end
-
-    def current_id
-      @id
-    end
-    
-    def current_type=(type)
-      @type = type
-    end
-
-    def current_type
-      @type
-    end
-
-    def current_prefix=(prefix)
-      @prefix = prefix
-    end
-
-    def current_prefix
-      @prefix
-    end
-
     def Network(network, params = nil)
       raise 'Not set network' unless network
 
@@ -151,11 +127,6 @@ module Social
 
     def prefix_by_type(type)
       SOCIAL_PREFIX[type]
-    end
-
-    def typing(index)
-      return type_by_id(index) if SOCIAL_TYPES.keys.include?(index.to_i)
-      return index.to_sym if SOCIAL_TYPES.values.include?(index.to_sym)
     end
 
     def type_codes
