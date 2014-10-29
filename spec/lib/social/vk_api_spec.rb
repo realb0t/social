@@ -41,7 +41,7 @@ describe 'Спецификация VkApi' do
         :uids    => uids.join(',')
       }
 
-      @api.user.should_receive(:process).with(params).exactly(3).and_return([])
+      mock(@api.user).process(params).times(3) { [] }
       @api.user.get_info(*uids)
       @api.user.get_info(uids)
       @api.user.get_info([uids])
@@ -50,7 +50,7 @@ describe 'Спецификация VkApi' do
 
     it "данные по пользователю должны возвращаться в известном формате" do
       data = @make_fake_datas.call(1)
-      @api.user.stub!(:http_query).and_return([200, { :response => data }.to_json])
+      stub(@api.user).http_query { [200, { :response => data }.to_json] }
       results = @api.user.get_info(1234567890)
       results.should be_a_kind_of Array
       results.first.should be_a_kind_of Hash

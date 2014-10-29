@@ -45,7 +45,7 @@ describe 'Спецификация OkApi' do
         :uids => @uids.join(",")
       }
 
-      @api.user.should_receive(:deliver).with(params).exactly(3).and_return([])
+      mock(@api.user).deliver(params).times(3) { [] }
       @api.user.get_info(*@uids)
       @api.user.get_info(@uids)
       @api.user.get_info([@uids])
@@ -60,7 +60,7 @@ describe 'Спецификация OkApi' do
         :session_secret_key => @secret
       }
 
-      @api.user.should_receive(:deliver).with(params).exactly(3).and_return([])
+      mock(@api.user).deliver(params).times(3) { [] }
       @api.user.get_info(@uids, { :secret => @secret })
       @api.user.get_info([@uids], { :secret => @secret })
       @api.user.get_info(*@uids, { :secret => @secret })
@@ -75,7 +75,7 @@ describe 'Спецификация OkApi' do
         :session_secret_key => @secret
       }
 
-      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      mock(@api.user).deliver(params) { [] }
       @api.user.get_info(@uids, { :secret => @secret, :fields => @fields })
     end
 
@@ -90,7 +90,7 @@ describe 'Спецификация OkApi' do
 
       uncorrect_fields = @fields + [ "uncorrect_field 1", "uncorrect_field 2" ]
 
-      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      mock(@api.user).deliver(params) { [] }
       @api.user.get_info(@uids, { :secret => @secret, :fields => uncorrect_fields })
     end
 
@@ -105,7 +105,7 @@ describe 'Спецификация OkApi' do
 
       uncorrect_fields = [ "uncorrect_field 1", "uncorrect_field 2" ]
 
-      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      mock(@api.user).deliver(params) { [] }
       @api.user.get_info(@uids, { :secret => @secret, :fields => uncorrect_fields })
     end
 
@@ -116,7 +116,7 @@ describe 'Спецификация OkApi' do
         :uids => @uids.join(",")
       }
 
-      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      mock(@api.user).deliver(params) { [] }
       @api.user.get_info(@uids, nil)
     end
 
@@ -127,13 +127,13 @@ describe 'Спецификация OkApi' do
         :uids => @uids.join(",")
       }
 
-      @api.user.should_receive(:deliver).with(params).exactly(1).and_return([])
+      mock(@api.user).deliver(params) { [] }
       @api.user.get_info(@uids, {})
     end
 
     it "данные по пользователю должны возвращаться в известном формате" do
       data = @make_fake_datas.call(1)
-      @api.user.stub!(:http_query).and_return([200, data.to_json])
+      stub(@api.user).http_query { [200, data.to_json] }
       results = @api.user.get_info(1234567890)
       results.should be_a_kind_of Array
       results.first.should be_a_kind_of Hash

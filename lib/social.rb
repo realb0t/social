@@ -4,16 +4,10 @@ require 'rack'
 require 'social/version'
 require 'social/provider'
 require 'social/builder'
-require 'social/cache'
 require 'social/config/vk'
 require 'social/config/ok'
 require 'social/config'
 require 'social/env'
-require 'social/helper/controller'
-require 'social/helper/model'
-require 'social/helper'
-require 'social/auth/controller'
-require 'social/auth'
 require 'social/network/graph/tail'
 require 'social/network/params'
 require 'social/network/base'
@@ -46,7 +40,62 @@ module Social
     :fb => 'fb'
   }
 
+  VK_PARAMS = %w(
+    api_url api_id api_settings viewer_id
+    viewer_type sid secret access_token
+    user_id group_id is_app_user auth_key
+    language parent_language ad_info
+    is_secure ads_app_id referrer lc_name hash
+  )
+
+  OK_PARAMS = %w(
+    authorized ip_geo_location api_server
+    new_sig apiconnection first_start
+    clientLog session_secret_key
+    application_key auth_sig web_server
+    session_key logged_user_id sig
+  )
+
   class << self
+
+    def social_params(params)
+      params.slice(VK_PARAMS + OK_PARAMS)
+    end
+
+    def social_request?(params)
+      request_social_type(params).present?
+    end
+
+    def request_social_type(params)
+      if params[:social_env]
+        params[:social_env][:type]
+      else
+        case 
+        when params[:viewer_id].present? && params[:sid].present? then :vk
+        when params[:logged_user_id].present? && params[:session_key].present? then :ok
+        else
+          nil
+        end
+      end
+    end
+
+    def request_session_token(params)
+      case request_social_type(params)
+      when :vk then "vk::#{params[:sid]}"
+      when :ok then "ok::#{params[:session_key]}"
+      else
+        raise 'Not defined social type'
+      end
+    end
+
+    def request_uid(params)
+      case request_social_type(params)
+      when :vk then "vk::#{params[:user_id]}"
+      when :ok then "ok::#{params[:logged_user_id]}"
+      else
+        raise 'Not defined social type'
+      end
+    end
 
     def current_id=(id)
       @id = id
@@ -98,6 +147,10 @@ module Social
 
     def id_by_prefix(prefix)
       id_by_type(type_by_prefix(prefix))
+    end
+
+    def prefix_by_type(type)
+      SOCIAL_PREFIX[type]
     end
 
     def typing(index)

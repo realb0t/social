@@ -1,5 +1,12 @@
 module Social
+
+  # Класс провайдерa для обеспечения
+  # social-prefix, принимает 
+  # prefix от builder'a и подмешивает
+  # social_env в параметры запроса
   class Provider
+
+    # @param [String]
     def self.build(prefix)
 
       klass = Class.new do
@@ -24,11 +31,6 @@ module Social
             'type'   => type,
             'id'     => id
           }
-
-          # Old
-          request.GET['soc_prefix'] = prefix
-          request.GET['soc_type']   = type
-          request.GET['soc_id']     = id
 
           @app.call(request.env)
         end
