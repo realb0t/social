@@ -1,82 +1,99 @@
-Social API wrapper and Tools
+Social
 ====================
 
-This is social networks api wrapper and authorization tools for social applications.
+Библиотека для обращения к API социальных сетей со стороны сервера. Содержит методы API и средства определения текущей социальной сети. 
 
-Now it is a compilation of terrible code from various projects. Without tests and benchmark. =(
+Предпологается использование в IFrame приложениях, на базе RoR или Sinatra. 
+(only IFrame applications).
 
-## NOT RECOMMENDED USE IN PRODUCTION
+Поддержка социальных сетей
 
-Now supported networks:
-
-* vk.com 
+* vk.com
 * odnoklassniki.ru
-* mail.ru (plans to support)
-* facebook.com (plans to support)
+* mail.ru (в планах)
+* facebook.com (в планах)
 
-Now supported features:
+Подерживаемые методы:
 
-* Get user profile
-* Get user friend profiles
-* Get user balance and charge off (only vk.com)
-* Initialize environment by request (example /odkl/*, /vk/* and other) - Rack Middleware
-* Authorization user for Rails application (support transition between pages)
+* Получает профиль пользователя
+* Получить список друзей для пользователя
+* Получить профили друзей
+* Работа с балансом пользователя (только для vk.com)
+* Инициализация социальной сети с помощью SocialPrefix (например для запросов /odkl/*, /vk/*) с помощью Rack Middleware
+* 
 * Parameterized wrapper to call the API methods
 
-Install
+Установка (Install)
 
     gem install social
 
+Для Gemfile
 
-Use wrapper
+    gem 'social'
+
+
+Использование (Usage)
 ---------------------
+
+Получение профиля пользователя (get user profile)
 
     Social::Network(:ok).user.get_info(uid)
 
-or
+или
 
     Social::Network::Vk.user.get_info(uid)
 
-or
+или отправка нотификации
 
-    Social::Network(socio_type).notification.send(:message => msg, :uids => [ ... ])
+    Social::Network(social_type).notification.send(:message => msg, :uids => [ ... ])
 
-Use environment tools
+
+Определение соцсети с помощью SocialPrefix
 ---------------------
 
-In config.ru
+SocialPrefix позволяет определять социальную сеть по строке запроса т.е.
 
-    builder = Social::Builder::produce(App::Application)
+- без использования субдоменов
+- без определения соц.сети по параметрам запроса (что также поддерживается)
+- без добавления доп.роутов в приложение
+
+Также пользоволяет решить проблему с показам аватаров пользователей в Одноклассниках, для которых в REFERRAL должно быть слово "odnoklassniki" или "odkl".
+
+config.ru
+
+    builder = Social::Builder::produce(Example::Application)
     run builder
 
-Adds an initializing environment.
+При этом в параметры запроса добавляется ключ social_env
+со следующим содержанием
 
-    request['social_env'] = {
+    request.params['social_env'] = {
       'prefix' => <SOCIAL_PREFIX>, 
       'type'   => <SOCIAL_TYPE_NAME>,
       'id'     => <SOCIAL_TYPE_ID>
     }
 
-For example, on request /odkl/*
+Например, при запросе /odkl/*
 
     params[:social_env][:id] # => 1
+    params[:social_env][:prefix] # => 'odkl'
+    params[:social_env][:type] # => :ok
 
-and after 
-    
-    include Social::Helper::Controller 
+Определение соцсети с помощью
+---------------------
 
-in your Rails application controller
+Помимо SocialPrefix определение соцсети можно осуществлять
+с помощью параметров запроса. Например если запрос содержит
+параметры viewer_id и sid, то можно сказать что это 
+соцсеть ВКонтакт.
 
-    Social::Env.id # => 1
-    Social::Env.type # => :ok
-    Social::Env.prefix # => :odkl
+Этот способ также предпологает использование Rack::Builder.
 
 TODO
 ---------------------
 
-* Tests, tests, tests ...
-* More network
-* More and beautiful API for Rails, Sinatra and Rack applications
-* More supported features
+* Тесты с использованием VCR
+* Поддержка Mail.ru
+* Поддержка Facebook
+* Больше поддерживаемых "общих" методов API
 
-### Welcome to contributing!
