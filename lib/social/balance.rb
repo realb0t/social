@@ -1,6 +1,7 @@
 module Social
   module Balance
 
+    # @deprecated
     def self.included(base)
       base.instance_eval do
         
@@ -19,20 +20,6 @@ module Social
         end
 
       end
-    end
-
-    def payments
-      Payment.where(:uid => self.uid, :social_type_id => self.social_type_id)
-    end
-
-    def payments_create(hash)
-      param = {:uid => self.uid, :social_type_id => self.social_type_id, :user_id => nil}.merge(hash)
-      param.delete(:initiatable) if param[:initiatable].is_a? Profile
-      Payment.create(param)
-    end
-
-    def initiated
-      []
     end
 
   end
