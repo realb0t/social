@@ -1,6 +1,2 @@
-module Social
-  module Network
-    class Vk
-    end
-  end
+module Social::Network::Graph::Vk
 end

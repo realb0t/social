@@ -1,6 +1,2 @@
-module Social
-  module Network
-    class Ok
-    end
-  end
+module Social::Network::Graph::Ok
 end
