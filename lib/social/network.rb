@@ -1,4 +1,4 @@
 module Social
-  module Network
+  class Network
   end
 end
