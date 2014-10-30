@@ -2,8 +2,9 @@ require 'singleton'
 require 'active_support/all'
 require 'rack'
 require 'social/version'
-require 'social/provider'
-require 'social/builder'
+require 'social/determinant'
+require 'social/determinant/social_prefix'
+require 'social/determinant/request_param'
 require 'social/config/vk'
 require 'social/config/ok'
 require 'social/config'
@@ -67,15 +68,25 @@ module Social
     end
 
     def request_social_type(params)
-      if params[:social_env]
+      if social_env = (params[:social_env])
+        # Если параметр задается с помощью RackBuilder
+        # через SocialPrefix и передается как social_env
+        # через параметры приложения
         params[:social_env][:type]
       else
-        case 
-        when params[:viewer_id].present? && params[:sid].present? then :vk
-        when params[:logged_user_id].present? && params[:session_key].present? then :ok
-        else
-          nil
-        end
+        params_social_type(params)
+      end
+    end
+
+    # Определяем тип социальной сети по параметрам
+    # первоначального запроса. Например если передан параметр
+    # viewer_id и sid, то это Вконтакте
+    def params_social_type(params)
+      case 
+      when params[:viewer_id].present? && params[:sid].present? then :vk
+      when params[:logged_user_id].present? && params[:session_key].present? then :ok
+      else
+        nil
       end
     end
 
