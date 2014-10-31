@@ -12,7 +12,7 @@ module Social
         instance.type   = social_type
         instance.id     = Social.id_by_type(social_type)
         instance.prefix = Social.prefix_by_type(social_type)
-        instance.instance_variable_set(@inited, true)
+        instance.instance_variable_set(:"@inited", true)
       end
 
       def init_by_params(params)
