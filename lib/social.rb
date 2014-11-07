@@ -90,8 +90,8 @@ module Social
       end
     end
 
-    def request_session_token(params)
-      case request_social_type(params)
+    def request_session_token(params, type = nil)
+      case (type || request_social_type(params))
       when :vk then "vk::#{params[:sid]}"
       when :ok then "ok::#{params[:session_key]}"
       else
@@ -99,8 +99,8 @@ module Social
       end
     end
 
-    def request_uid(params)
-      case request_social_type(params)
+    def request_uid(params, type = nil)
+      case (type || request_social_type(params))
       when :vk then "vk::#{params[:user_id]}"
       when :ok then "ok::#{params[:logged_user_id]}"
       else

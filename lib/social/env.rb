@@ -17,7 +17,7 @@ module Social
 
       def init_by_params(params)
         unless social_type = Social.request_social_type(params)
-          raise "Can't find social env in params #{params.inspect}"
+          raise "Can't find social type into SocialEnv or SocialParams with params: #{params.inspect}"
         else
           init(social_type)
         end
