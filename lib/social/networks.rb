@@ -8,11 +8,9 @@ module Social
 
     def site(network, params)
       @domains[network.to_sym] ||= deploy(network)
-      @domains[network.to_sym].params!(params)
-    end
-
-    def sites
-      @domains
+      @domains[network.to_sym].params = params || {}
+      @domains[network.to_sym].reload_config
+      @domains[network.to_sym]
     end
 
     protected

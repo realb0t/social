@@ -2,7 +2,10 @@ module Social::Network::Graph::Vk
   class Base
             
     include Social::Network::Graph::Tail
-    include Social::Config::Vk
+
+    def config
+      Social::Network(:vk).config
+    end
 
     def http_query(query)
       Net::HTTP.start("api.vkontakte.ru", 80).get(query)

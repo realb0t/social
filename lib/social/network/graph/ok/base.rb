@@ -29,7 +29,10 @@ module Social::Network::Graph::Ok
   class Base
     
     include Social::Network::Graph::Tail
-    include Social::Config::Ok
+
+    def config
+      Social::Network(:ok).config
+    end
 
     def normalize_msg(msg)
       [ ['&nbps;', ' '],

@@ -14,22 +14,30 @@ class Social::Network::Base
     init_graph_for(root, list)
   end
 
+  def reload_config
+    if self.params[:config].present?
+      @config = self.params[:config]
+    else
+      provider_type = self.params[:config_provider] || :file
+      @config = Social::Config::Provider.factory_data(social_type, provider_type)
+    end
+  end
+
+  def config
+    reload_config if @config.nil?
+    @config
+  end
+
   def params
     @params
   end
 
-  def params!(params)
-    @params = params
-    self
+  def params=(params)
+    @params = params.with_indifferent_access
   end
 
   def param(key)
     @params[key]
-  end
-
-  def param!(key, value)
-    @params[key] = value
-    self
   end
 
   protected

@@ -1,6 +1,16 @@
 class Social::Network
   class Ok < Base
-    include Social::Config::Ok
+
+    def social_type
+      :ok
+    end
+
+    def safe_config(auth_params = {})
+      auth_params.merge \
+        :api_server       => Social::Network(:ok).config[:api_server],
+        :application_key  => Social::Network(:ok).config[:application_key],
+        :logged_user_id   => auth_params['uid']
+    end
     
     def rate
       1

@@ -1,6 +1,15 @@
 class Social::Network
   class Vk < Base
-    include Social::Config::Vk
+
+    def social_type
+      :vk
+    end
+
+    def safe_config(auth_params = {})
+      auth_params.merge \
+        :app_id         => Social::Network(:vk).config['app_id'],
+        :logged_user_id => auth_params['uid']
+    end
     
     def rate
       6
