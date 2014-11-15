@@ -109,7 +109,7 @@ module Social
       end
     end
 
-    def Network(network, params = nil)
+    def by_name(network, params = nil)
       raise 'Not set network' unless network
 
       unless SOCIAL_TYPES.values.include?(network.to_sym)
@@ -117,6 +117,12 @@ module Social
       end
 
       Social::Networks.instance.site(network.to_sym, params)
+    end
+
+    alias :Network :by_name
+
+    def current(params = nil)
+      by_name(Social::Env.type)
     end
 
     def type_by_id(id = nil)
